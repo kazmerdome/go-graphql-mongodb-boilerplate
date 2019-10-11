@@ -67,7 +67,8 @@ func (p *Page) Create() error {
 	p.UpdatedAt = time.Now()
 
 	collection := db.GetCollection(PageCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	item := new(Page)
 	collection.FindOne(ctx, bson.M{"locale": p.Locale, "name_slug": p.NameSlug}).Decode(&item)
@@ -95,7 +96,8 @@ func (p *Page) Create() error {
 // One ...
 func (p *Page) One(filter *PageWhereInput) error {
 	collection := db.GetCollection(PageCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	collection.FindOne(ctx, &filter).Decode(&p)
 	return nil
 }
@@ -106,7 +108,8 @@ func (p *Page) List(filter *PageWhereInput, orderBy *PageOrderByInput, skip *int
 	orderByKey := "created_at"
 	orderByValue := -1
 	collection := db.GetCollection(PageCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	options := options.Find()
 	if limit != nil {
@@ -134,7 +137,8 @@ func (p *Page) Update() error {
 	p.UpdatedAt = time.Now()
 
 	collection := db.GetCollection(PageCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	item := new(Page)
 	collection.FindOne(ctx, bson.M{"locale": p.Locale, "name_slug": p.NameSlug, "_id": bson.M{"$ne": p.ID}}).Decode(&item)
@@ -159,9 +163,10 @@ func (p *Page) Update() error {
 // Delete ...
 func (p *Page) Delete() error {
 	collection := db.GetCollection(PageCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	collection.FindOne(ctx, bson.M{"_id": p.ID}).Decode(&p)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
+	collection.FindOne(ctx, bson.M{"_id": p.ID}).Decode(&p)
 	if p.Slug == "" {
 		return errors.New("item doesn't exist")
 	}

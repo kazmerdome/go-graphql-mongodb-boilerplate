@@ -54,6 +54,17 @@ type Query {
     skip: Int
     limit: Int
   ): [User]!
+
+  # General
+  general(
+    where: GeneralWhereInput
+  ): General
+  generals(
+    where: GeneralWhereInput
+    orderBy: GeneralOrderByInput
+    skip: Int
+    limit: Int
+  ): [General]!
 }
 
 type Mutation {
@@ -104,4 +115,9 @@ type Mutation {
   deleteUser(
     where: UserWhereUniqueInput!
   ): User
+
+  # General
+  createGeneral(
+    data: GeneralCreateInput!
+  ): General!
 }

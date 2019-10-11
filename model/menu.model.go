@@ -69,13 +69,14 @@ func (m *Menu) Create() error {
 	m.UpdatedAt = time.Now()
 
 	collection := db.GetCollection(MenuCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	item := new(Menu)
 	collection.FindOne(ctx, bson.M{"locale": m.Locale, "slug": m.Slug}).Decode(&item)
 
 	if item.Name != "" {
-		return errors.New("Menu slug is already exist in this locale")
+		return errors.New("menu slug is already exist in this locale")
 	}
 
 	res, err := collection.InsertOne(ctx, m)
@@ -94,7 +95,8 @@ func (m *Menu) Create() error {
 // One ...
 func (m *Menu) One(filter *MenuWhereInput) error {
 	collection := db.GetCollection(MenuCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	collection.FindOne(ctx, &filter).Decode(&m)
 	return nil
@@ -106,7 +108,8 @@ func (m *Menu) List(filter *MenuWhereInput, orderBy *MenuOrderByInput, skip *int
 	orderByKey := "created_at"
 	orderByValue := -1
 	collection := db.GetCollection(MenuCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	options := options.Find()
 	if limit != nil {
@@ -134,13 +137,14 @@ func (m *Menu) Update() error {
 	m.UpdatedAt = time.Now()
 
 	collection := db.GetCollection(MenuCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	item := new(Menu)
 	collection.FindOne(ctx, bson.M{"locale": m.Locale, "slug": m.Slug, "_id": bson.M{"$ne": m.ID}}).Decode(&item)
 
 	if item.Slug != "" {
-		return errors.New("Menu slug is already exist in this locale")
+		return errors.New("menu slug is already exist in this locale")
 	}
 
 	_, err := collection.UpdateOne(ctx, bson.M{"_id": m.ID}, bson.M{"$set": m})
@@ -156,11 +160,12 @@ func (m *Menu) Update() error {
 // Delete ...
 func (m *Menu) Delete() error {
 	collection := db.GetCollection(MenuCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	collection.FindOne(ctx, bson.M{"_id": m.ID}).Decode(&m)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
+	collection.FindOne(ctx, bson.M{"_id": m.ID}).Decode(&m)
 	if m.Slug == "" {
-		return errors.New("item doesn't exist")
+		return errors.New("menu doesn't exist")
 	}
 
 	_, err := collection.DeleteOne(ctx, bson.M{"_id": m.ID})

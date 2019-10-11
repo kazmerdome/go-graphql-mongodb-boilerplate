@@ -51,7 +51,8 @@ func (t *Translation) Create() error {
 	t.UpdatedAt = time.Now()
 
 	collection := db.GetCollection(TranslationCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	item := new(Translation)
 	collection.FindOne(ctx, bson.M{"locale": t.Locale, "key": t.Key}).Decode(&item)
@@ -72,7 +73,9 @@ func (t *Translation) Create() error {
 // One ...
 func (t *Translation) One(filter *TranslationWhereInput) error {
 	collection := db.GetCollection(TranslationCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	collection.FindOne(ctx, &filter).Decode(&t)
 	return nil
 }
@@ -83,7 +86,8 @@ func (t *Translation) List(filter *TranslationWhereInput, orderBy *TranslationOr
 	orderByKey := "created_at"
 	orderByValue := -1
 	collection := db.GetCollection(TranslationCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	options := options.Find()
 	if limit != nil {
@@ -111,7 +115,8 @@ func (t *Translation) Update() error {
 	t.UpdatedAt = time.Now()
 
 	collection := db.GetCollection(TranslationCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	item := new(Translation)
 	collection.FindOne(ctx, bson.M{"locale": t.Locale, "key": t.Key, "_id": bson.M{"$ne": t.ID}}).Decode(&item)
@@ -133,9 +138,10 @@ func (t *Translation) Update() error {
 // Delete ...
 func (t *Translation) Delete() error {
 	collection := db.GetCollection(TranslationCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	collection.FindOne(ctx, bson.M{"_id": t.ID}).Decode(&t)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
+	collection.FindOne(ctx, bson.M{"_id": t.ID}).Decode(&t)
 	if t.Key == "" {
 		return errors.New("item doesn't exist")
 	}

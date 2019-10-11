@@ -23,5 +23,5 @@ clean:
 
 .PHONY: generate
 generate:
-	@rm -r tmp
+	@if [ -d tmp ]; then rm -r tmp; fi;
 	@go run scripts/gqlgen.go

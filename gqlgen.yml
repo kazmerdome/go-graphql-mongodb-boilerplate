@@ -21,6 +21,10 @@ models:
   Seo:
     model: aery-graphql/model.Seo
 
+  #  Role
+  Role:
+    model: aery-graphql/guard.Role
+
   # Menu
   Menu:
     model: aery-graphql/model.Menu
@@ -84,9 +88,40 @@ models:
   AppPolicyWhereInput:
     model: aery-graphql/model.AppPolicy
 
-  #  Role
-  Role:
-    model: aery-graphql/guard.Role
+  # General
+  General:
+    model: aery-graphql/model.General
+    fields:
+      seo:
+        resolver: true
+      info:
+        resolver: true
+      social:
+        resolver: true
+      navigation:
+        resolver: true
+  GeneralInfo:
+    model: aery-graphql/model.GeneralInfo
+  GeneralSocial:
+    model: aery-graphql/model.GeneralSocial
+  GeneralNavigation:
+    model: aery-graphql/model.GeneralNavigation
+    fields:
+      menu:
+        resolver: true
+  GeneralOrderByInput:
+    model: aery-graphql/model.GeneralOrderByInput
+  GeneralInfoType:
+    model: aery-graphql/model.GeneralInfoType
+  GeneralSocialType:
+    model: aery-graphql/model.GeneralSocialType
+  GeneralNavigationType:
+    model: aery-graphql/model.GeneralNavigationType
+  GeneralWhereUniqueInput:
+    model: aery-graphql/model.GeneralWhereUniqueInput
+  GeneralWhereInput:
+    model: aery-graphql/model.GeneralWhereInput
+
 resolver:
   # Goal: copy&paste from generated file
   filename: tmp/resolver.go

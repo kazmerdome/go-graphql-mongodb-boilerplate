@@ -64,7 +64,8 @@ func (u *User) Create() error {
 	u.UpdatedAt = time.Now()
 
 	collection := db.GetCollection(UserCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	item := new(User)
 	collection.FindOne(ctx, bson.M{"email": u.Email}).Decode(&item)
@@ -87,7 +88,9 @@ func (u *User) Create() error {
 // One ...
 func (u *User) One(filter *UserWhereInput) error {
 	collection := db.GetCollection(UserCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	collection.FindOne(ctx, &filter).Decode(&u)
 	return nil
 }
@@ -98,7 +101,8 @@ func (u *User) List(filter *UserWhereInput, orderBy *UserOrderByInput, skip *int
 	orderByKey := "created_at"
 	orderByValue := -1
 	collection := db.GetCollection(UserCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	options := options.Find()
 	if limit != nil {
@@ -126,7 +130,8 @@ func (u *User) Update() error {
 	u.UpdatedAt = time.Now()
 
 	collection := db.GetCollection(UserCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	item := new(User)
 	collection.FindOne(ctx, bson.M{"email": u.Email, "_id": bson.M{"$ne": u.ID}}).Decode(&item)
@@ -147,9 +152,10 @@ func (u *User) Update() error {
 // Delete ...
 func (u *User) Delete() error {
 	collection := db.GetCollection(UserCollectionName)
-	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
-	collection.FindOne(ctx, bson.M{"_id": u.ID}).Decode(&u)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
+	collection.FindOne(ctx, bson.M{"_id": u.ID}).Decode(&u)
 	if u.Email == "" {
 		return errors.New("user doesn't exist")
 	}

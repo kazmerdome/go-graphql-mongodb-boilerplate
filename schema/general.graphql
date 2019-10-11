@@ -1,0 +1,108 @@
+# MODEL
+##########
+type General {
+  id: ObjectID!
+  locale: Locale!
+  seo: Seo!
+  info: [GeneralInfo!]!
+  social: [GeneralSocial!]!
+  navigation: [GeneralNavigation!]!
+  homepage: String!
+  created_at: Time!
+  updated_at: Time!
+}
+
+type GeneralInfo {
+  type: GeneralInfoType!
+  value: String!
+}
+
+type GeneralSocial {
+  type: GeneralSocialType!
+  value: String!
+}
+
+type GeneralNavigation {
+  type: GeneralNavigationType!
+  menu: Menu!
+}
+
+# ENUM
+##########
+enum GeneralOrderByInput {
+  locale_ASC
+  locale_DESC
+  created_at_ASC
+  created_at_DESC
+  updated_at_ASC
+  updated_at_DESC
+}
+
+enum GeneralInfoType {
+  LOGO
+  EMAIL
+  PHONE
+  ADDRESS
+}
+
+enum GeneralSocialType {
+  FACEBOOK
+  INSTAGRAM
+  LINKEDIN
+  TWITTER
+}
+
+enum GeneralNavigationType {
+  HEADER
+  FOOTER
+}
+
+# CREATE DTO
+##########
+input GeneralCreateInput {
+  id: ObjectID
+  locale: Locale!
+  seo: SeoCreateOneInput!
+  info: GeneralInfoCreateManyInput
+  social: GeneralSocialCreateManyInput
+  navigation: GeneralNavigationCreateManyInput
+  homepage: String
+}
+
+input GeneralInfoCreateManyInput {
+  create: [GeneralInfoCreateInput!]!
+}
+
+input GeneralSocialCreateManyInput {
+  create: [GeneralSocialCreateInput!]!
+}
+
+input GeneralNavigationCreateManyInput {
+  create: [GeneralNavigationCreateInput!]!
+}
+
+input GeneralInfoCreateInput {
+  type: GeneralInfoType!
+  value: String!
+}
+
+input GeneralSocialCreateInput {
+  type: GeneralSocialType!
+  value: String!
+}
+
+input GeneralNavigationCreateInput {
+  type: GeneralNavigationType!
+  menu: ObjectID!
+}
+
+# FETCH DTO
+##########
+input GeneralWhereUniqueInput {
+  id: ObjectID!
+}
+
+input GeneralWhereInput {
+  id: ObjectID
+  locale: Locale
+}
