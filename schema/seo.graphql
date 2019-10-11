@@ -1,0 +1,28 @@
+# MODEL
+##########
+type Seo {
+  title: String!
+  description: String
+  keywords: String
+  image: String
+}
+
+
+# CREATE DTO
+##########
+input SeoCreateOneInput {
+  create: SeoCreateInput
+}
+
+input SeoCreateInput {
+  title: String!
+  description: String
+  keywords: String
+  image: String
+}
+
+# CREATE DTO
+##########
+input SeoUpdateOneInput {
+  create: SeoCreateInput
+}

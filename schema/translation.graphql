@@ -1,0 +1,59 @@
+# MODEL
+##########
+type Translation {
+  id: ObjectID!
+  locale: Locale!
+  key: String!
+  value: String!
+  created_at: Time!
+  updated_at: Time!
+}
+
+
+# ENUM
+##########
+enum TranslationOrderByInput {
+  locale_ASC
+  locale_DESC
+  key_ASC
+  key_DESC
+  value_ASC
+  value_DESC
+  created_at_ASC
+  created_at_DESC
+  updated_at_ASC
+  updated_at_DESC
+}
+
+
+# CREATE DTO
+##########
+input TranslationCreateInput {
+  id: ObjectID
+  locale: Locale!
+  key: String!
+  value: String!
+}
+
+
+# FETCH DTO
+##########
+input TranslationWhereUniqueInput {
+  id: ObjectID!
+}
+
+input TranslationWhereInput {
+  id: ObjectID
+  locale: Locale
+  key: String
+  value: String
+}
+
+
+# UPDATE DTO
+###########
+input TranslationUpdateInput {
+  locale: Locale!
+  key: String!
+  value: String!
+}

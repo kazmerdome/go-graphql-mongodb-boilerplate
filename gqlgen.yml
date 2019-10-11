@@ -1,0 +1,93 @@
+schema:
+ - "schema/*.graphql"
+exec:
+  filename: generated/gqlgen/gqlgen.go
+model:
+  filename: generated/gqlgen/models.go
+models:
+  # Scalars
+  ObjectID:
+    model: aery-graphql/scalar.ObjectIDScalar
+  Json:
+    model: aery-graphql/scalar.JSONScalar
+
+  # Locale
+  Locale:
+    model: aery-graphql/model.Locale
+
+  # Status
+  Status:
+    model: aery-graphql/model.Status
+  Seo:
+    model: aery-graphql/model.Seo
+
+  # Menu
+  Menu:
+    model: aery-graphql/model.Menu
+    fields:
+      links:
+        resolver: true
+  MenuLink:
+    model: aery-graphql/model.MenuLink
+  MenuLinkType:
+    model: aery-graphql/model.MenuLinkType
+  MenuOrderByInput:
+    model: aery-graphql/model.MenuOrderByInput
+  MenuWhereInput:
+    model: aery-graphql/model.MenuWhereInput
+  MenuWhereUniqueInput:
+    model: aery-graphql/model.MenuWhereUniqueInput
+
+  # Page
+  Page:
+    model: aery-graphql/model.Page
+    fields:
+      seo:
+        resolver: true
+      modules:
+        resolver: true
+  Modules:
+    model: aery-graphql/model.Modules
+  PageOrderByInput:
+    model: aery-graphql/model.PageOrderByInput
+  PageWhereInput:
+    model: aery-graphql/model.PageWhereInput
+  PageWhereUniqueInput:
+    model: aery-graphql/model.PageWhereUniqueInput
+
+  # Translation
+  Translation:
+    model: aery-graphql/model.Translation
+  TranslationOrderByInput:
+    model: aery-graphql/model.TranslationOrderByInput
+  TranslationWhereInput:
+    model: aery-graphql/model.TranslationWhereInput
+  TranslationWhereUniqueInput:
+    model: aery-graphql/model.TranslationWhereUniqueInput
+
+  # User
+  User:
+    model: aery-graphql/model.User
+    fields:
+      app_policy:
+        resolver: true
+  AppPolicy:
+    model: aery-graphql/model.AppPolicy
+  AppPolicyResource:
+    model: aery-graphql/model.AppPolicyResource
+  UserOrderByInput:
+    model: aery-graphql/model.UserOrderByInput
+  UserWhereInput:
+    model: aery-graphql/model.UserWhereInput
+  UserWhereUniqueInput:
+    model: aery-graphql/model.UserWhereUniqueInput
+  AppPolicyWhereInput:
+    model: aery-graphql/model.AppPolicy
+
+  #  Role
+  Role:
+    model: aery-graphql/guard.Role
+resolver:
+  # Goal: copy&paste from generated file
+  filename: tmp/resolver.go
+  type: Resolver

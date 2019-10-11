@@ -1,0 +1,13 @@
+package model
+
+// Status ...
+type Status string
+
+var (
+	// StatusDraft ...
+	StatusDraft Status = "DRAFT"
+	// StatusActive ...
+	StatusActive Status = "ACTIVE"
+	// StatusArchive ...
+	StatusArchive Status = "ARCHIVE"
+)

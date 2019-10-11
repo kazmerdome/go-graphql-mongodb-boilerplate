@@ -1,0 +1,94 @@
+# MODEL
+##########
+type Menu {
+  id: ObjectID!
+  locale: Locale!
+  status: Status!
+  name: String!
+  slug: String!
+  links: [MenuLink!]!
+  created_at: Time!
+  updated_at: Time!
+}
+
+type MenuLink {
+  id: ObjectID!
+  type: MenuLinkType!
+  name: String!
+  url: String!
+}
+
+
+# ENUM
+##########
+enum MenuLinkType {
+  INNER
+  OUTER
+}
+
+enum MenuOrderByInput {
+  locale_ASC
+  locale_DESC
+  status_ASC
+  status_DESC
+  name_ASC
+  name_DESC
+  slug_ASC
+  slug_DESC
+  created_at_ASC
+  created_at_DESC
+  updated_at_ASC
+  updated_at_DESC
+}
+
+
+# CREATE DTO
+##########
+input MenuCreateInput {
+  id: ObjectID
+  locale: Locale!
+  status: Status!
+  name: String!
+  slug: String!
+  links: MenuLinkCreateManyInput
+}
+
+input MenuLinkCreateManyInput {
+  create: [MenuLinkCreateInput!]
+}
+
+input MenuLinkCreateInput {
+  id: ObjectID
+  type: MenuLinkType!
+  name: String!
+  url: String!
+}
+
+
+# FETCH DTO
+##########
+input MenuWhereUniqueInput {
+  id: ObjectID!
+}
+
+input MenuWhereInput {
+  id: ObjectID
+  slug: String
+  locale: Locale
+  status: Status
+}
+
+
+# UPDATE DTO
+###########
+input MenuUpdateInput {
+  locale: Locale!
+  slug: String!
+  status: Status
+  name: String
+  links: MenuLinkUpdateManyInput
+}
+
+input MenuLinkUpdateManyInput {
+  create: [MenuLinkCreateInput!]!
+}

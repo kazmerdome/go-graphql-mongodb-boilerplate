@@ -1,0 +1,97 @@
+# MODEL
+##########
+type User {
+  id: ObjectID!
+  firstname: String!
+  lastname: String!
+  google_id: String!
+  email: String!
+  app_policy: [AppPolicy!]!
+  created_at: Time!
+  updated_at: Time!
+}
+
+type AppPolicy {
+  resource: AppPolicyResource!
+  role: Role!
+}
+
+# ENUM
+##########
+enum AppPolicyResource {
+  BLACKDOME_SERVER
+}
+
+enum Role {
+  USER
+  PARTNER
+  EDITOR
+  ADMIN
+}
+
+enum UserOrderByInput {
+  firstname_ASC
+  firstname_DESC
+  lastname_ASC
+  lastname_DESC
+  email_ASC
+  email_DESC
+  created_at_ASC
+  created_at_DESC
+  updated_at_ASC
+  updated_at_DESC
+}
+
+
+# CREATE DTO
+##########
+input UserCreateInput {
+  id: ObjectID
+  firstname: String!
+  lastname: String!
+  google_id: String
+  email: String!
+  app_policy: AppPolicyCreateManyInput!
+}
+
+input AppPolicyCreateManyInput {
+  create: [AppPolicyCreateInput!]!
+}
+
+input AppPolicyCreateInput {
+  resource: AppPolicyResource!
+  role: Role!
+}
+
+# FETCH DTO
+##########
+input UserWhereUniqueInput {
+  id: ObjectID!
+}
+
+input UserWhereInput {
+  id: ObjectID
+  firstname: String
+  lastname: String
+  email: String
+  app_policy: AppPolicyWhereInput
+}
+
+input AppPolicyWhereInput {
+  resource: AppPolicyResource!
+  role: Role!
+}
+
+# UPDATE DTO
+###########
+input UserUpdateInput {
+  firstname: String
+  lastname: String
+  google_id: String
+  email: String!
+  app_policy: AppPolicyUpdateManyInput
+}
+
+input AppPolicyUpdateManyInput {
+  create: [AppPolicyCreateInput!]!
+}

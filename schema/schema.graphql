@@ -1,0 +1,107 @@
+scalar Time
+scalar ObjectID
+scalar Json
+
+type Query {
+  # Menu
+  menu(
+    where: MenuWhereInput
+    searchInNameAndSlug: String
+  ): Menu
+  menus(
+    where: MenuWhereInput
+    searchInNameAndSlug: String
+    orderBy: MenuOrderByInput
+    skip: Int
+    limit: Int
+  ): [Menu]!
+
+  # Page
+  page(
+    where: PageWhereInput
+    searchInNameAndNameSlugAndTitleAndSlug: String
+  ): Page
+  pages(
+    where: PageWhereInput
+    searchInNameAndNameSlugAndTitleAndSlug: String
+    orderBy: PageOrderByInput
+    skip: Int
+    limit: Int
+  ): [Page]!
+
+  # Translation
+  translation(
+    where: TranslationWhereInput
+    searchInKeyAndValue: String
+  ): Translation
+  translations(
+    where: TranslationWhereInput
+    searchInKeyAndValue: String
+    orderBy: TranslationOrderByInput
+    skip: Int
+    limit: Int
+  ): [Translation]!
+
+  # User
+  user(
+    where: UserWhereInput
+    searchInFirstnameAndLastnameAndEmail: String
+  ): User
+  users(
+    where: UserWhereInput
+    searchInFirstnameAndLastnameAndEmail: String
+    orderBy: UserOrderByInput
+    skip: Int
+    limit: Int
+  ): [User]!
+}
+
+type Mutation {
+  # Menu
+  createMenu(
+    data: MenuCreateInput
+  ): Menu!
+  updateMenu(
+    where: MenuWhereUniqueInput!
+    data: MenuUpdateInput!
+  ): Menu
+  deleteMenu(
+    where: MenuWhereUniqueInput!
+  ): Menu
+
+  # Page
+  createPage(
+    data: PageCreateInput!
+  ): Page!
+  updatePage(
+    where: PageWhereUniqueInput!
+    data: PageUpdateInput!
+  ): Page
+  deletePage(
+    where: PageWhereUniqueInput!
+  ): Page
+
+  # Translation
+  createTranslation(
+    data: TranslationCreateInput!
+  ): Translation!
+  updateTranslation(
+    where: TranslationWhereUniqueInput!
+    data: TranslationUpdateInput!
+  ): Translation
+  deleteTranslation(
+    where: TranslationWhereUniqueInput!
+  ): Translation
+
+  # User
+  createUser(
+    data: UserCreateInput!
+  ): User!
+  updateUser(
+    where: UserWhereUniqueInput!
+    data: UserUpdateInput!
+  ): User
+  deleteUser(
+    where: UserWhereUniqueInput!
+  ): User
+}
