@@ -5,6 +5,7 @@
 ### General ###
 tmp/*
 build/*
+generated/*
 
 ### dotenv ###
 .env
