@@ -49,11 +49,15 @@ type UserWhereInput struct {
 	Lastname  *string             `json:"lastname" bson:"lastname,omitempty"`
 	Email     *string             `json:"email" bson:"email,omitempty"`
 	AppPolicy *AppPolicy          `json:"app_policy" bson:"app_policy,omitempty"`
+	GoogleID  *string             `json:"google_id" bson:"google_id,omitempty"`
 	OR        []bson.M            `json:"$or,omitempty" bson:"$or,omitempty"`
 }
 
 // AppPolicyResource ...
 type AppPolicyResource string
+
+// BlackdomeServer ...
+const BlackdomeServer AppPolicyResource = "BLACKDOME_SERVER"
 
 // UserOrderByInput ...
 type UserOrderByInput string

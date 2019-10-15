@@ -1,8 +1,6 @@
 package server
 
 import (
-	"aery-graphql/config"
-
 	"github.com/fatih/color"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -19,7 +17,7 @@ func New() *echo.Echo {
 	GetRoutes(e)
 
 	e.HideBanner = true
-	e.Logger.Fatal(e.Start(":" + config.GetConfig().GetString("server.port")))
+	e.Logger.Fatal(e.Start(":" + "9090"))
 	return e
 }
 

@@ -21,8 +21,8 @@ func GetCollection(collectionName string) *mongo.Collection {
 // Init ...
 func Init() {
 	url := config.GetSecret("MONGO_URI")
-	dataBaseName := config.GetConfig().GetString("db.collection")
-	retryWrites := config.GetConfig().GetString("db.retryWrites")
+	dataBaseName := config.GetSecret("MONGO_COLLECTION")
+	retryWrites := config.GetSecret("MONGO_RETRYWRITES")
 	connectionURI := url + "/" + dataBaseName + "?retryWrites=" + retryWrites
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)

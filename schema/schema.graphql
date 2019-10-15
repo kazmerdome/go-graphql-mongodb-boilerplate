@@ -1,7 +1,15 @@
+# SCALAR
+##########
 scalar Time
 scalar ObjectID
 scalar Json
 
+# DIRECTIVE
+##########
+directive @auth(role: [Role!]!) on FIELD_DEFINITION
+
+# QUERY
+##########
 type Query {
   # Menu
   menu(
@@ -46,14 +54,14 @@ type Query {
   user(
     where: UserWhereInput
     searchInFirstnameAndLastnameAndEmail: String
-  ): User
+  ): User @auth(role: ADMIN)
   users(
     where: UserWhereInput
     searchInFirstnameAndLastnameAndEmail: String
     orderBy: UserOrderByInput
     skip: Int
     limit: Int
-  ): [User]!
+  ): [User]! @auth(role: [ADMIN])
 
   # General
   general(
@@ -67,57 +75,59 @@ type Query {
   ): [General]!
 }
 
+# MUTATION
+##########
 type Mutation {
   # Menu
   createMenu(
     data: MenuCreateInput
-  ): Menu!
+  ): Menu! @auth(role: ADMIN)
   updateMenu(
     where: MenuWhereUniqueInput!
     data: MenuUpdateInput!
-  ): Menu
+  ): Menu @auth(role: ADMIN)
   deleteMenu(
     where: MenuWhereUniqueInput!
-  ): Menu
+  ): Menu @auth(role: ADMIN)
 
   # Page
   createPage(
     data: PageCreateInput!
-  ): Page!
+  ): Page! @auth(role: ADMIN)
   updatePage(
     where: PageWhereUniqueInput!
     data: PageUpdateInput!
-  ): Page
+  ): Page @auth(role: ADMIN)
   deletePage(
     where: PageWhereUniqueInput!
-  ): Page
+  ): Page @auth(role: ADMIN)
 
   # Translation
   createTranslation(
     data: TranslationCreateInput!
-  ): Translation!
+  ): Translation! @auth(role: ADMIN)
   updateTranslation(
     where: TranslationWhereUniqueInput!
     data: TranslationUpdateInput!
-  ): Translation
+  ): Translation @auth(role: ADMIN)
   deleteTranslation(
     where: TranslationWhereUniqueInput!
-  ): Translation
+  ): Translation @auth(role: ADMIN)
 
   # User
   createUser(
     data: UserCreateInput!
-  ): User!
+  ): User! @auth(role: ADMIN)
   updateUser(
     where: UserWhereUniqueInput!
     data: UserUpdateInput!
-  ): User
+  ): User @auth(role: ADMIN)
   deleteUser(
     where: UserWhereUniqueInput!
-  ): User
+  ): User @auth(role: ADMIN)
 
   # General
   createGeneral(
     data: GeneralCreateInput!
-  ): General!
+  ): General! @auth(role: ADMIN)
 }

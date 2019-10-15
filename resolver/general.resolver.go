@@ -2,7 +2,6 @@ package resolver
 
 import (
 	"aery-graphql/generated/gqlgen"
-	"aery-graphql/guard"
 	"aery-graphql/model"
 	"context"
 )
@@ -112,10 +111,6 @@ func (r *queryResolver) Generals(
  * Mutations
  */
 func (r *mutationResolver) CreateGeneral(ctx context.Context, data gqlgen.GeneralCreateInput) (*model.General, error) {
-	if err := guard.Auth([]guard.Role{guard.Editor, guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.General{
 		Locale: data.Locale,
 	}

@@ -2,7 +2,6 @@ package resolver
 
 import (
 	"aery-graphql/generated/gqlgen"
-	"aery-graphql/guard"
 	"aery-graphql/model"
 	"aery-graphql/utility"
 	"context"
@@ -44,9 +43,6 @@ func (r *userResolver) AppPolicy(ctx context.Context, obj *model.User) ([]*model
  * Queries
  */
 func (r *queryResolver) User(ctx context.Context, where *model.UserWhereInput, searchInFirstnameAndLastnameAndEmail *string) (*model.User, error) {
-	if err := guard.Auth([]guard.Role{guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
 	if where == nil {
 		where = &model.UserWhereInput{}
 	}
@@ -71,10 +67,6 @@ func (r *queryResolver) Users(
 	skip *int,
 	limit *int,
 ) ([]*model.User, error) {
-	if err := guard.Auth([]guard.Role{guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	if where == nil {
 		where = &model.UserWhereInput{}
 	}
@@ -95,10 +87,6 @@ func (r *queryResolver) Users(
  * Mutations
  */
 func (r *mutationResolver) CreateUser(ctx context.Context, data gqlgen.UserCreateInput) (*model.User, error) {
-	if err := guard.Auth([]guard.Role{guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.User{
 		Firstname: data.Firstname,
 		Lastname:  data.Lastname,
@@ -126,10 +114,6 @@ func (r *mutationResolver) CreateUser(ctx context.Context, data gqlgen.UserCreat
 }
 
 func (r *mutationResolver) UpdateUser(ctx context.Context, where model.UserWhereUniqueInput, data gqlgen.UserUpdateInput) (*model.User, error) {
-	if err := guard.Auth([]guard.Role{guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.User{}
 	item.ID = where.ID
 	if data.Firstname != nil {
@@ -158,10 +142,6 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, where model.UserWhere
 }
 
 func (r *mutationResolver) DeleteUser(ctx context.Context, where model.UserWhereUniqueInput) (*model.User, error) {
-	if err := guard.Auth([]guard.Role{guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.User{ID: where.ID}
 
 	if err := item.Delete(); err != nil {

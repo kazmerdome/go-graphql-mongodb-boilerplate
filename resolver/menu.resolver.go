@@ -99,10 +99,6 @@ func (r *queryResolver) Menus(
  * Mutations
  */
 func (r *mutationResolver) CreateMenu(ctx context.Context, data *gqlgen.MenuCreateInput) (*model.Menu, error) {
-	if err := guard.Auth([]guard.Role{guard.Editor, guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.Menu{
 		Locale: data.Locale,
 		Status: data.Status,
@@ -131,10 +127,6 @@ func (r *mutationResolver) CreateMenu(ctx context.Context, data *gqlgen.MenuCrea
 }
 
 func (r *mutationResolver) UpdateMenu(ctx context.Context, where model.MenuWhereUniqueInput, data gqlgen.MenuUpdateInput) (*model.Menu, error) {
-	if err := guard.Auth([]guard.Role{guard.Editor, guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.Menu{}
 	item.ID = where.ID
 	item.Locale = data.Locale
@@ -167,10 +159,6 @@ func (r *mutationResolver) UpdateMenu(ctx context.Context, where model.MenuWhere
 }
 
 func (r *mutationResolver) DeleteMenu(ctx context.Context, where model.MenuWhereUniqueInput) (*model.Menu, error) {
-	if err := guard.Auth([]guard.Role{guard.Editor, guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.Menu{ID: where.ID}
 
 	if err := item.Delete(); err != nil {

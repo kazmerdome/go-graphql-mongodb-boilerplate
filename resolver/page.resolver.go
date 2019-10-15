@@ -105,10 +105,6 @@ func (r *queryResolver) Pages(
  * Mutations
  */
 func (r *mutationResolver) CreatePage(ctx context.Context, data gqlgen.PageCreateInput) (*model.Page, error) {
-	if err := guard.Auth([]guard.Role{guard.Editor, guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.Page{
 		Locale:   data.Locale,
 		Status:   data.Status,
@@ -153,10 +149,6 @@ func (r *mutationResolver) CreatePage(ctx context.Context, data gqlgen.PageCreat
 }
 
 func (r *mutationResolver) UpdatePage(ctx context.Context, where model.PageWhereUniqueInput, data gqlgen.PageUpdateInput) (*model.Page, error) {
-	if err := guard.Auth([]guard.Role{guard.Editor, guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.Page{}
 	item.ID = where.ID
 	item.Locale = data.Locale
@@ -204,10 +196,6 @@ func (r *mutationResolver) UpdatePage(ctx context.Context, where model.PageWhere
 }
 
 func (r *mutationResolver) DeletePage(ctx context.Context, where model.PageWhereUniqueInput) (*model.Page, error) {
-	if err := guard.Auth([]guard.Role{guard.Editor, guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.Page{ID: where.ID}
 
 	if err := item.Delete(); err != nil {

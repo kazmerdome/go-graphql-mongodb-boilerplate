@@ -1,11 +1,16 @@
 package server
 
 import (
+	"aery-graphql/controller"
 	"aery-graphql/generated/gqlgen"
+	"aery-graphql/guard"
 	"aery-graphql/model"
 	"aery-graphql/resolver"
 	"aery-graphql/utility"
+	"context"
+	"fmt"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/handler"
 	"github.com/labstack/echo"
 )
@@ -18,19 +23,26 @@ func getHeaders(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		headers := c.Request().Header
 		token = utility.GetHeaderString("Aerylabs-Auth", headers)
-		locale = model.Locales[utility.GetHeaderString("Locale", headers)]
 		return next(c)
 	}
 }
 
 // GetRoutes ...
 func GetRoutes(e *echo.Echo) {
-	resolver := resolver.Resolver{
-		Token:  &token,
-		Locale: &locale,
+	auth := new(controller.AuthController)
+	resolver := resolver.Resolver{Token: &token}
+	config := gqlgen.Config{Resolvers: &resolver}
+	config.Directives.Auth = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []guard.Role) (interface{}, error) {
+		if err := guard.Auth(role, *resolver.Token); err != nil {
+			return nil, fmt.Errorf("Access denied")
+		}
+		return next(ctx)
 	}
 
 	e.Use(getHeaders)
-	e.GET("/", echo.WrapHandler(handler.Playground("GraphQL Playground", "/query")))
-	e.POST("/query", echo.WrapHandler(handler.GraphQL(gqlgen.NewExecutableSchema(gqlgen.Config{Resolvers: &resolver}))))
+
+	e.GET("/", echo.WrapHandler(handler.Playground("Aery Labs GraphQL Playground", "/query")))
+	e.POST("/query", echo.WrapHandler(handler.GraphQL(gqlgen.NewExecutableSchema(config))))
+	e.GET("/auth/google/login", auth.OauthGoogle)
+	e.GET("/auth/google/callback", auth.OauthGoogleCallback)
 }

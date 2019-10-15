@@ -2,7 +2,6 @@ package resolver
 
 import (
 	"aery-graphql/generated/gqlgen"
-	"aery-graphql/guard"
 	"aery-graphql/model"
 	"aery-graphql/utility"
 	"context"
@@ -68,10 +67,6 @@ func (r *queryResolver) Translations(
  * Mutations
  */
 func (r *mutationResolver) CreateTranslation(ctx context.Context, data gqlgen.TranslationCreateInput) (*model.Translation, error) {
-	if err := guard.Auth([]guard.Role{guard.Editor, guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.Translation{
 		Locale: data.Locale,
 		Key:    data.Key,
@@ -86,10 +81,6 @@ func (r *mutationResolver) CreateTranslation(ctx context.Context, data gqlgen.Tr
 }
 
 func (r *mutationResolver) UpdateTranslation(ctx context.Context, where model.TranslationWhereUniqueInput, data gqlgen.TranslationUpdateInput) (*model.Translation, error) {
-	if err := guard.Auth([]guard.Role{guard.Editor, guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.Translation{}
 	item.ID = where.ID
 	item.Locale = data.Locale
@@ -104,10 +95,6 @@ func (r *mutationResolver) UpdateTranslation(ctx context.Context, where model.Tr
 }
 
 func (r *mutationResolver) DeleteTranslation(ctx context.Context, where model.TranslationWhereUniqueInput) (*model.Translation, error) {
-	if err := guard.Auth([]guard.Role{guard.Editor, guard.Admin}, *r.Resolver.Token); err != nil {
-		return nil, err
-	}
-
 	item := model.Translation{ID: where.ID}
 
 	if err := item.Delete(); err != nil {

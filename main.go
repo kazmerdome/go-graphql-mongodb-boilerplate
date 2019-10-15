@@ -1,7 +1,6 @@
 package main
 
 import (
-	"aery-graphql/config"
 	"aery-graphql/db"
 	"aery-graphql/server"
 
@@ -20,7 +19,6 @@ func main() {
 	 */
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	environment := flag.String("env", "development", "")
-	config.Init(*environment)
 
 	fmt.Println("")
 	color.New(color.FgWhite).Println("     ¸__¸  ___ ¸___     / /   ¸__¸ __¸¸ ¸__¸")
