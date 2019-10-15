@@ -130,4 +130,11 @@ type Mutation {
   createGeneral(
     data: GeneralCreateInput!
   ): General! @auth(role: ADMIN)
+  updateGeneral(
+    where: GeneralWhereUniqueInput!
+    data: GeneralUpdateInput!
+  ): General @auth(role: ADMIN)
+  deleteGeneral(
+    where: GeneralWhereUniqueInput!
+  ): General @auth(role: ADMIN)
 }

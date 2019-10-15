@@ -106,3 +106,26 @@ input GeneralWhereInput {
   id: ObjectID
   locale: Locale
 }
+
+# UPDATE DTO
+###########
+input GeneralUpdateInput {
+  locale: Locale!
+  seo: SeoUpdateOneInput
+  info: GeneralInfoUpdateManyInput
+  social: GeneralSocialUpdateManyInput
+  navigation: GeneralNavigationUpdateManyInput
+  homepage: String
+}
+
+input GeneralInfoUpdateManyInput {
+  create: [GeneralInfoCreateInput!]!
+}
+
+input GeneralSocialUpdateManyInput {
+  create: [GeneralSocialCreateInput!]!
+}
+
+input GeneralNavigationUpdateManyInput {
+  create: [GeneralNavigationCreateInput!]!
+}
