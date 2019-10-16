@@ -2,8 +2,22 @@ package utility
 
 import (
 	"strings"
+
+	"go.mongodb.org/mongo-driver/bson"
 )
 
+// MongoSearchFieldParser ...
+func MongoSearchFieldParser(fields []string, keyword string) []bson.M {
+	var or []bson.M
+
+	for _, f := range fields {
+		or = append(or, bson.M{f: bson.M{"$regex": keyword}})
+	}
+
+	return or
+}
+
+// GetOrderByKeyAndValue ...
 func GetOrderByKeyAndValue(orderBy string) (string, int) {
 	if orderBy != "" {
 		var orderKey string

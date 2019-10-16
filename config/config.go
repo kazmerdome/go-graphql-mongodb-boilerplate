@@ -1,18 +1,33 @@
 package config
 
 import (
-	"log"
 	"os"
 	"strings"
 
 	"github.com/joho/godotenv"
 )
 
+func isFileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
 // GetSecret config provider
 func GetSecret(secret string) string {
 	secret = strings.ToUpper(secret)
-	mode := "dotenv"
 
+	// 1. parse .env file if it exists
+	if isFileExists(".env") {
+		godotenv.Load()
+	}
+
+	// 2. get env variable
+	env := os.Getenv(secret)
+
+	// 3. check if env == ***DOCKER_SECRET***
 	// @TODO
 	// secret mode for docker secrets
 	// for swarm production
@@ -30,16 +45,5 @@ func GetSecret(secret string) string {
 	// 	return string(secretValue)
 	// }
 
-	// dotenv mode with .env file
-	// in project root (Developmenmt only)
-	if mode == "dotenv" {
-		err := godotenv.Load()
-		if err != nil {
-			log.Fatal("Error loading .env file")
-		}
-	}
-
-	// env mode with global environment variables
-	// for production
-	return os.Getenv(secret)
+	return env
 }

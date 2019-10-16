@@ -8,7 +8,7 @@ import (
 )
 
 // ParseBearerToken Bearer token to userID
-func ParseBearerToken(bearer string) (primitive.ObjectID, error) {
+func GetObjectIDFromBearerToken(bearer string) (primitive.ObjectID, error) {
 	rawTokenParts := strings.Split(bearer, "Bearer ")
 	if len(rawTokenParts) < 2 {
 		return primitive.ObjectID{}, errors.New("invalid header token")

@@ -27,7 +27,7 @@ func (r *queryResolver) Translation(ctx context.Context, where *model.Translatio
 		where = &model.TranslationWhereInput{}
 	}
 	if searchInKeyAndValue != nil {
-		where.OR = utility.SearchParser(model.TranslationSearchFields, *searchInKeyAndValue)
+		where.OR = utility.MongoSearchFieldParser(model.TranslationSearchFields, *searchInKeyAndValue)
 	}
 
 	item := model.Translation{}
@@ -51,7 +51,7 @@ func (r *queryResolver) Translations(
 		where = &model.TranslationWhereInput{}
 	}
 	if searchInKeyAndValue != nil {
-		where.OR = utility.SearchParser(model.PageSearchFields, *searchInKeyAndValue)
+		where.OR = utility.MongoSearchFieldParser(model.PageSearchFields, *searchInKeyAndValue)
 	}
 
 	item := model.Translation{}

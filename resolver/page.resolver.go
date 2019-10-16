@@ -60,7 +60,7 @@ func (r *queryResolver) Page(ctx context.Context, where *model.PageWhereInput, s
 	}
 
 	if searchInNameAndNameSlugAndTitleAndSlug != nil {
-		where.OR = utility.SearchParser(model.PageSearchFields, *searchInNameAndNameSlugAndTitleAndSlug)
+		where.OR = utility.MongoSearchFieldParser(model.PageSearchFields, *searchInNameAndNameSlugAndTitleAndSlug)
 	}
 
 	item := model.Page{}
@@ -89,7 +89,7 @@ func (r *queryResolver) Pages(
 		where.Status = &model.StatusActive
 	}
 	if searchInNameAndNameSlugAndTitleAndSlug != nil {
-		where.OR = utility.SearchParser(model.PageSearchFields, *searchInNameAndNameSlugAndTitleAndSlug)
+		where.OR = utility.MongoSearchFieldParser(model.PageSearchFields, *searchInNameAndNameSlugAndTitleAndSlug)
 	}
 
 	item := model.Page{}

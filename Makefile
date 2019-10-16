@@ -1,6 +1,20 @@
 NAME=aery-graphql
 VERSION=0.0.1
 
+# OUTSIDE DOCKER
+start:
+	docker-compose run --service-ports $(NAME)
+
+restart:
+	docker container prune -f
+	docker-compose down --volumes --rmi all
+	docker-compose run --service-ports $(NAME)
+
+stop:
+	docker container prune -f
+	docker-compose down --volumes --rmi all
+
+# INSIDE DOCKER
 .PHONY: init
 init:
 	@go mod init $(NAME)
@@ -12,10 +26,6 @@ build:
 .PHONY: run
 run: build
 	@./build/$(NAME) -env development
-
-.PHONY: run-prod
-run-prod: build
-	@./build/$(NAME) -env production
 
 .PHONY: clean
 clean:

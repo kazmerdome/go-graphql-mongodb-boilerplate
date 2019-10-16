@@ -54,7 +54,7 @@ func (r *queryResolver) Menu(ctx context.Context, where *model.MenuWhereInput, s
 	}
 
 	if searchInNameAndSlug != nil {
-		where.OR = utility.SearchParser(model.MenuSearchFields, *searchInNameAndSlug)
+		where.OR = utility.MongoSearchFieldParser(model.MenuSearchFields, *searchInNameAndSlug)
 	}
 
 	item := model.Menu{}
@@ -83,7 +83,7 @@ func (r *queryResolver) Menus(
 		where.Status = &model.StatusActive
 	}
 	if searchInNameAndSlug != nil {
-		where.OR = utility.SearchParser(model.MenuSearchFields, *searchInNameAndSlug)
+		where.OR = utility.MongoSearchFieldParser(model.MenuSearchFields, *searchInNameAndSlug)
 	}
 
 	item := model.Menu{}

@@ -69,6 +69,8 @@ func checkRole(userRole Role, requiredRoles []Role) bool {
 
 // GetUserCurrentRole get user current role on a specific resource the default role is User
 func getUserCurrentRole(userID primitive.ObjectID) Role {
+	userCurrentRole := User
+
 	// fetch user from db
 	u := AuthUser{}
 	if err := u.getUserData(&userID); err != nil {
@@ -81,7 +83,6 @@ func getUserCurrentRole(userID primitive.ObjectID) Role {
 	}
 
 	// get current role from user []AppPolicy
-	userCurrentRole := User
 	for _, policy := range u.AppPolicy {
 		if policy.Resource == resource {
 			userCurrentRole = policy.Role
@@ -100,7 +101,7 @@ func GetRole(bearerToken string) Role {
 	if bearerToken == "" {
 		return User
 	}
-	userID, err := utility.ParseBearerToken(bearerToken)
+	userID, err := utility.GetObjectIDFromBearerToken(bearerToken)
 	if err != nil {
 		return User
 	}
@@ -113,7 +114,7 @@ func Auth(requiredRoles []Role, bearerToken string) error {
 	if bearerToken == "" && checkRole(User, requiredRoles) {
 		return nil
 	}
-	userID, err := utility.ParseBearerToken(bearerToken)
+	userID, err := utility.GetObjectIDFromBearerToken(bearerToken)
 	if err != nil {
 		return err
 	}

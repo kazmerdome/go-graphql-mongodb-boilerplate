@@ -47,7 +47,7 @@ func (r *queryResolver) User(ctx context.Context, where *model.UserWhereInput, s
 		where = &model.UserWhereInput{}
 	}
 	if searchInFirstnameAndLastnameAndEmail != nil {
-		where.OR = utility.SearchParser(model.UserSearchFields, *searchInFirstnameAndLastnameAndEmail)
+		where.OR = utility.MongoSearchFieldParser(model.UserSearchFields, *searchInFirstnameAndLastnameAndEmail)
 	}
 
 	item := model.User{}
@@ -71,7 +71,7 @@ func (r *queryResolver) Users(
 		where = &model.UserWhereInput{}
 	}
 	if searchInFirstnameAndLastnameAndEmail != nil {
-		where.OR = utility.SearchParser(model.UserSearchFields, *searchInFirstnameAndLastnameAndEmail)
+		where.OR = utility.MongoSearchFieldParser(model.UserSearchFields, *searchInFirstnameAndLastnameAndEmail)
 	}
 
 	item := model.User{}

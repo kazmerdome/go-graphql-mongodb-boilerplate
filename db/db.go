@@ -25,7 +25,8 @@ func Init() {
 	retryWrites := config.GetSecret("MONGO_RETRYWRITES")
 	connectionURI := url + "/" + dataBaseName + "?retryWrites=" + retryWrites
 
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(connectionURI))
 
 	if err != nil {

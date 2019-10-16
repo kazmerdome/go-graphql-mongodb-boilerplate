@@ -1,11 +1,11 @@
 package server
 
 import (
-	"aery-graphql/controller"
 	"aery-graphql/generated/gqlgen"
 	"aery-graphql/guard"
 	"aery-graphql/model"
 	"aery-graphql/resolver"
+	"aery-graphql/service"
 	"aery-graphql/utility"
 	"context"
 	"fmt"
@@ -29,7 +29,7 @@ func getHeaders(next echo.HandlerFunc) echo.HandlerFunc {
 
 // GetRoutes ...
 func GetRoutes(e *echo.Echo) {
-	auth := new(controller.AuthController)
+	auth := new(service.AuthController)
 	resolver := resolver.Resolver{Token: &token}
 	config := gqlgen.Config{Resolvers: &resolver}
 	config.Directives.Auth = func(ctx context.Context, obj interface{}, next graphql.Resolver, role []guard.Role) (interface{}, error) {
@@ -42,7 +42,15 @@ func GetRoutes(e *echo.Echo) {
 	e.Use(getHeaders)
 
 	e.GET("/", echo.WrapHandler(handler.Playground("Aery Labs GraphQL Playground", "/query")))
-	e.POST("/query", echo.WrapHandler(handler.GraphQL(gqlgen.NewExecutableSchema(config))))
+	e.POST(
+		"/query",
+		echo.WrapHandler(
+			handler.GraphQL(
+				gqlgen.NewExecutableSchema(config),
+				// handler.IntrospectionEnabled(false),
+			),
+		),
+	)
 	e.GET("/auth/google/login", auth.OauthGoogle)
 	e.GET("/auth/google/callback", auth.OauthGoogleCallback)
 }
