@@ -1,7 +1,10 @@
 package config
 
 import (
+	"io/ioutil"
+	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/joho/godotenv"
@@ -25,25 +28,24 @@ func GetSecret(secret string) string {
 	}
 
 	// 2. get env variable
-	env := os.Getenv(secret)
+	value := os.Getenv(secret)
 
-	// 3. check if env == ***DOCKER_SECRET***
-	// @TODO
-	// secret mode for docker secrets
-	// for swarm production
-	// if mode == "secret" {
-	// 	path, err := filepath.Abs(config.GetString("secret.docker-secret-path"))
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
+	// 3. check if docker secret mode
+	// in ptoduction image, the workplace is the /run folder
+	// the docker secrets live in run/secrets folder
+	if value == "***DOCKER_SECRET***" {
+		path, err := filepath.Abs("./secrets")
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	// 	secretValue, err := ioutil.ReadFile(path + "/" + secret)
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
+		secretFile := path + "/" + secret
+		secretValue, err := ioutil.ReadFile(secretFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		return string(secretValue)
+	}
 
-	// 	return string(secretValue)
-	// }
-
-	return env
+	return value
 }
