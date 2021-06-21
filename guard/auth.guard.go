@@ -1,14 +1,16 @@
 package guard
 
 import (
-	"aery-graphql/db"
-	"aery-graphql/utility"
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
+	"go-graphql-mongodb-boilerplate/db"
+	"go-graphql-mongodb-boilerplate/utility"
+
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"gopkg.in/mgo.v2/bson"
 )
 
 // Role type
@@ -18,26 +20,17 @@ type Role string
 type Resource string
 
 // User and other roles
-const (
-	resource Resource = "BLACKDOME_SERVER"
-	User     Role     = "USER"
-	Partner  Role     = "PARTNER"
-	Editor   Role     = "EDITOR"
-	Admin    Role     = "ADMIN"
+var (
+	User   Role = "USER"
+	Editor Role = "EDITOR"
+	Admin  Role = "ADMIN"
 )
 
 // AuthUser ...
 type AuthUser struct {
-	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	GoogleID  string             `json:"google_id" bson:"google_id,omitempty"`
-	Email     string             `json:"email" bson:"email,omitempty"`
-	AppPolicy []AppPolicy        `json:"app_policy" bson:"app_policy,omitempty"`
-}
-
-// AppPolicy ...
-type AppPolicy struct {
-	Resource Resource `json:"resource" bson:"resource,omitempty"`
-	Role     Role     `json:"role" bson:"role,omitempty"`
+	ID    primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
+	Email string             `json:"email" bson:"email,omitempty"`
+	Role  Role               `json:"role" bson:"role,omitempty"`
 }
 
 /**
@@ -45,11 +38,17 @@ type AppPolicy struct {
  */
 
 // GetUserData from db user collection
+const DB_COLLECTION_NAME__USER = "User"
+const DB_REF_NAME__USER = "default"
+
 func (a *AuthUser) getUserData(userID *primitive.ObjectID) error {
-	collection := db.GetCollection("User")
+	collection := db.GetCollection(DB_COLLECTION_NAME__USER, DB_REF_NAME__USER)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	err := collection.FindOne(ctx, bson.M{"_id": userID}).Decode(&a)
+
+	filter := bson.M{"_id": userID}
+	err := collection.FindOne(ctx, &filter).Decode(&a)
+
 	if err != nil {
 		return err
 	}
@@ -77,17 +76,13 @@ func getUserCurrentRole(userID primitive.ObjectID) Role {
 		return User
 	}
 
-	// check []AppPolicy is exist, if not it means user is also not exist || invalid stored user
-	if u.AppPolicy == nil && len(u.AppPolicy) < 1 {
+	// check Role is exist, if not it means user is also not exist || invalid stored user
+	if u.Role == "" {
 		return User
 	}
 
-	// get current role from user []AppPolicy
-	for _, policy := range u.AppPolicy {
-		if policy.Resource == resource {
-			userCurrentRole = policy.Role
-		}
-	}
+	// get current role from user role
+	userCurrentRole = u.Role
 
 	return userCurrentRole
 }
@@ -107,6 +102,37 @@ func GetRole(bearerToken string) Role {
 	}
 	userCurrentRole := getUserCurrentRole(userID)
 	return userCurrentRole
+}
+
+// GetUserID Guard
+func GetUserID(bearerToken string) (primitive.ObjectID, error) {
+	if bearerToken == "" {
+		return primitive.ObjectID{}, fmt.Errorf("Access denied")
+	}
+	userID, err := utility.GetObjectIDFromBearerToken(bearerToken)
+	if err != nil {
+		return primitive.ObjectID{}, fmt.Errorf("Access denied")
+	}
+	return userID, nil
+}
+
+// GetUserData Guard
+func GetUserData(bearerToken string) (AuthUser, error) {
+	u := AuthUser{}
+	if bearerToken == "" {
+		return u, fmt.Errorf("Access denied")
+	}
+	// get object ID from token
+	userID, err := utility.GetObjectIDFromBearerToken(bearerToken)
+	if err != nil {
+		return u, fmt.Errorf("Access denied")
+	}
+	// fetch user from db
+
+	if err := u.getUserData(&userID); err != nil {
+		return u, fmt.Errorf("Access denied")
+	}
+	return u, nil
 }
 
 // Auth Guard

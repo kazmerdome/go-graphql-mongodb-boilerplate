@@ -1,9 +1,9 @@
 package scalar
 
 import (
-	"aery-graphql/utility"
 	"encoding/json"
 	"errors"
+	"go-graphql-mongodb-boilerplate/utility"
 	"io"
 
 	"github.com/99designs/gqlgen/graphql"

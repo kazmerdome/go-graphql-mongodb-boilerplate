@@ -1,0 +1,22 @@
+# MODEL
+##########
+type AuthToken @goModel(model: "go-graphql-mongodb-boilerplate/model.AuthToken") {
+  token: String!
+}
+
+type AuthBasicStrategy @goModel(model: "go-graphql-mongodb-boilerplate/model.AuthBasicStrategy") {
+  email: String!
+  password: String!
+}
+
+# DTO
+##########
+input AuthBasicStrategySignUpDTO @goModel(model: "go-graphql-mongodb-boilerplate/model.AuthBasicStrategySignUpDTO") {
+  email: String!
+  username: String!
+  password: String!
+}
+input AuthBasicStrategySignInDTO @goModel(model: "go-graphql-mongodb-boilerplate/model.AuthBasicStrategySignInDTO") {
+  username: String!
+  password: String!
+}

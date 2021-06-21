@@ -1,19 +1,19 @@
 version: '3.4'
 
 services:
-  aery-graphql:
+  go-graphql-mongodb-boilerplate:
     build:
       context: .
       dockerfile: ./Dockerfile
       target: dev
     env_file: ./.env
     volumes:
-      - .:/aery-graphql:delegated
-      - notused:/aery-graphql/build
+      - .:/go-graphql-mongodb-boilerplate:delegated
+      - build:/go-graphql-mongodb-boilerplate/build
     ports:
       - "9090:9090"
     healthcheck:
       disable: true
 
 volumes:
-  notused:
+  build:

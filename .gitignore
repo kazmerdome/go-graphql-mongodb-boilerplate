@@ -5,6 +5,7 @@
 ### General ###
 tmp/*
 build/*
+vendor/*
 
 ### dotenv ###
 .env

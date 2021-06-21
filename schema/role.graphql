@@ -1,0 +1,5 @@
+enum Role @goModel(model: "go-graphql-mongodb-boilerplate/guard.Role") {
+  USER
+  EDITOR
+  ADMIN
+}

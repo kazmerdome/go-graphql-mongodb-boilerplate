@@ -1,140 +1,87 @@
-# SCALAR
-##########
-scalar Time
-scalar ObjectID
-scalar Json
-
 # DIRECTIVE
 ##########
 directive @auth(role: [Role!]!) on FIELD_DEFINITION
 
+directive @goModel(model: String, models: [String!]) on OBJECT
+    | INPUT_OBJECT
+    | SCALAR
+    | ENUM
+    | INTERFACE
+    | UNION
+
+directive @goField(forceResolver: Boolean, name: String) on INPUT_FIELD_DEFINITION
+    | FIELD_DEFINITION
+
+
+# SCALAR
+##########
+scalar Time
+scalar ObjectID @goModel(model: "go-graphql-mongodb-boilerplate/scalar.ObjectIDScalar")
+scalar Json @goModel(model: "go-graphql-mongodb-boilerplate/scalar.JSONScalar")
+
+
 # QUERY
 ##########
 type Query {
-  # Menu
-  menu(
-    where: MenuWhereInput
-    searchInNameAndSlug: String
-  ): Menu
-  menus(
-    where: MenuWhereInput
-    searchInNameAndSlug: String
-    orderBy: MenuOrderByInput
-    skip: Int
-    limit: Int
-  ): [Menu]!
-
-  # Page
-  page(
-    where: PageWhereInput
-    searchInNameAndNameSlugAndTitleAndSlug: String
-  ): Page
-  pages(
-    where: PageWhereInput
-    searchInNameAndNameSlugAndTitleAndSlug: String
-    orderBy: PageOrderByInput
-    skip: Int
-    limit: Int
-  ): [Page]!
-
-  # Translation
-  translation(
-    where: TranslationWhereInput
-    searchInKeyAndValue: String
-  ): Translation
-  translations(
-    where: TranslationWhereInput
-    searchInKeyAndValue: String
-    orderBy: TranslationOrderByInput
-    skip: Int
-    limit: Int
-  ): [Translation]!
-
   # User
+  ##########
+  userMe: User
+
+  "@auth(role: [ADMIN])"
   user(
-    where: UserWhereInput
-    searchInFirstnameAndLastnameAndEmail: String
+    where: UserWhereDTO
+    search: String
   ): User @auth(role: ADMIN)
+
+  "@auth(role: [ADMIN])"
   users(
-    where: UserWhereInput
-    searchInFirstnameAndLastnameAndEmail: String
-    orderBy: UserOrderByInput
+    where: UserWhereDTO
+    "search in : [email, username]"
+    search: String
+    in: [ObjectID]
+    orderBy: UserOrderByENUM
     skip: Int
     limit: Int
   ): [User]! @auth(role: [ADMIN])
 
-  # General
-  general(
-    where: GeneralWhereInput
-  ): General
-  generals(
-    where: GeneralWhereInput
-    orderBy: GeneralOrderByInput
-    skip: Int
-    limit: Int
-  ): [General]!
+  "@auth(role: [ADMIN])"
+  userCount(
+    where: UserWhereDTO
+    search: String
+  ): Int @auth(role: [ADMIN])
+
 }
 
 # MUTATION
 ##########
 type Mutation {
-  # Menu
-  createMenu(
-    data: MenuCreateInput
-  ): Menu! @auth(role: ADMIN)
-  updateMenu(
-    where: MenuWhereUniqueInput!
-    data: MenuUpdateInput!
-  ): Menu @auth(role: ADMIN)
-  deleteMenu(
-    where: MenuWhereUniqueInput!
-  ): Menu @auth(role: ADMIN)
+  # Auth
+  ##########
+  authBasicStrategySignUp(
+    data: AuthBasicStrategySignUpDTO!
+  ): AuthToken!
 
-  # Page
-  createPage(
-    data: PageCreateInput!
-  ): Page! @auth(role: ADMIN)
-  updatePage(
-    where: PageWhereUniqueInput!
-    data: PageUpdateInput!
-  ): Page @auth(role: ADMIN)
-  deletePage(
-    where: PageWhereUniqueInput!
-  ): Page @auth(role: ADMIN)
+  authBasicStrategySignIn(
+    data: AuthBasicStrategySignInDTO!
+  ): AuthToken!
 
-  # Translation
-  createTranslation(
-    data: TranslationCreateInput!
-  ): Translation! @auth(role: ADMIN)
-  updateTranslation(
-    where: TranslationWhereUniqueInput!
-    data: TranslationUpdateInput!
-  ): Translation @auth(role: ADMIN)
-  deleteTranslation(
-    where: TranslationWhereUniqueInput!
-  ): Translation @auth(role: ADMIN)
 
   # User
+  ##########
+  "@auth(role: [ADMIN])"
   createUser(
-    data: UserCreateInput!
+    data: UserCreateDTO!
   ): User! @auth(role: ADMIN)
+
+  "@auth(role: [ADMIN])"
   updateUser(
-    where: UserWhereUniqueInput!
-    data: UserUpdateInput!
-  ): User @auth(role: ADMIN)
+    where: UserWhereUniqueDTO!
+    data: UserUpdateDTO!
+  ): User @auth(role: [ADMIN])
+
+  "@auth(role: [ADMIN])"
   deleteUser(
-    where: UserWhereUniqueInput!
+    where: UserWhereUniqueDTO!
   ): User @auth(role: ADMIN)
 
-  # General
-  createGeneral(
-    data: GeneralCreateInput!
-  ): General! @auth(role: ADMIN)
-  updateGeneral(
-    where: GeneralWhereUniqueInput!
-    data: GeneralUpdateInput!
-  ): General @auth(role: ADMIN)
-  deleteGeneral(
-    where: GeneralWhereUniqueInput!
-  ): General @auth(role: ADMIN)
 }

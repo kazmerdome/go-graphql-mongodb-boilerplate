@@ -1,128 +1,56 @@
+# Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
- - "schema/*.graphql"
+  - schema/*.graphql
+
+# Where should the generated server code go?
 exec:
   filename: generated/gqlgen/gqlgen.go
+  package: gqlgen
+
+# Uncomment to enable federation
+# federation:
+#   filename: graph/generated/federation.go
+#   package: generated
+
+# Where should any generated models go?
 model:
   filename: generated/gqlgen/models.go
-models:
-  # Scalars
-  ObjectID:
-    model: aery-graphql/scalar.ObjectIDScalar
-  Json:
-    model: aery-graphql/scalar.JSONScalar
+  package: gqlgen
 
-  # Locale
-  Locale:
-    model: aery-graphql/model.Locale
-
-  # Status
-  Status:
-    model: aery-graphql/model.Status
-  Seo:
-    model: aery-graphql/model.Seo
-
-  #  Role
-  Role:
-    model: aery-graphql/guard.Role
-
-  # Menu
-  Menu:
-    model: aery-graphql/model.Menu
-    fields:
-      links:
-        resolver: true
-  MenuLink:
-    model: aery-graphql/model.MenuLink
-  MenuLinkType:
-    model: aery-graphql/model.MenuLinkType
-  MenuOrderByInput:
-    model: aery-graphql/model.MenuOrderByInput
-  MenuWhereInput:
-    model: aery-graphql/model.MenuWhereInput
-  MenuWhereUniqueInput:
-    model: aery-graphql/model.MenuWhereUniqueInput
-
-  # Page
-  Page:
-    model: aery-graphql/model.Page
-    fields:
-      seo:
-        resolver: true
-      modules:
-        resolver: true
-  Modules:
-    model: aery-graphql/model.Modules
-  PageOrderByInput:
-    model: aery-graphql/model.PageOrderByInput
-  PageWhereInput:
-    model: aery-graphql/model.PageWhereInput
-  PageWhereUniqueInput:
-    model: aery-graphql/model.PageWhereUniqueInput
-
-  # Translation
-  Translation:
-    model: aery-graphql/model.Translation
-  TranslationOrderByInput:
-    model: aery-graphql/model.TranslationOrderByInput
-  TranslationWhereInput:
-    model: aery-graphql/model.TranslationWhereInput
-  TranslationWhereUniqueInput:
-    model: aery-graphql/model.TranslationWhereUniqueInput
-
-  # User
-  User:
-    model: aery-graphql/model.User
-    fields:
-      app_policy:
-        resolver: true
-  AppPolicy:
-    model: aery-graphql/model.AppPolicy
-  AppPolicyResource:
-    model: aery-graphql/model.AppPolicyResource
-  UserOrderByInput:
-    model: aery-graphql/model.UserOrderByInput
-  UserWhereInput:
-    model: aery-graphql/model.UserWhereInput
-  UserWhereUniqueInput:
-    model: aery-graphql/model.UserWhereUniqueInput
-  AppPolicyWhereInput:
-    model: aery-graphql/model.AppPolicy
-
-  # General
-  General:
-    model: aery-graphql/model.General
-    fields:
-      seo:
-        resolver: true
-      info:
-        resolver: true
-      social:
-        resolver: true
-      navigation:
-        resolver: true
-  GeneralInfo:
-    model: aery-graphql/model.GeneralInfo
-  GeneralSocial:
-    model: aery-graphql/model.GeneralSocial
-  GeneralNavigation:
-    model: aery-graphql/model.GeneralNavigation
-    fields:
-      menu:
-        resolver: true
-  GeneralOrderByInput:
-    model: aery-graphql/model.GeneralOrderByInput
-  GeneralInfoType:
-    model: aery-graphql/model.GeneralInfoType
-  GeneralSocialType:
-    model: aery-graphql/model.GeneralSocialType
-  GeneralNavigationType:
-    model: aery-graphql/model.GeneralNavigationType
-  GeneralWhereUniqueInput:
-    model: aery-graphql/model.GeneralWhereUniqueInput
-  GeneralWhereInput:
-    model: aery-graphql/model.GeneralWhereInput
-
+# Where should the resolver implementations go?
 resolver:
-  # Goal: copy&paste from generated file
-  filename: tmp/resolver.go
-  type: Resolver
+  layout: follow-schema
+  dir: tmp
+  package: tmp
+
+# Optional: turn on use `gqlgen:"fieldName"` tags in your models
+# struct_tag: json
+
+# Optional: turn on to use []Thing instead of []*Thing
+# omit_slice_element_pointers: false
+
+# Optional: set to speed up generation time by not performing a final validation pass.
+# skip_validation: true
+
+# gqlgen will search for any type names in the schema in these go packages
+# if they match it will use them, otherwise it will generate them.
+# autobind:
+#   - "go-graphql-mongodb-boilerplate/model"
+
+# This section declares type mapping between the GraphQL and go type systems
+#
+# The first line in each type will be used as defaults for resolver arguments and
+# modelgen, the others will be allowed when binding to fields. Configure them to
+# your liking
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.ID
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  Int:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32

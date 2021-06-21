@@ -1,13 +1,26 @@
 package model
 
-// Status ...
+/**
+ * DB Info
+ */
+
+/**
+ * SEARCH regex fields
+ */
+
+/**
+ * MODEL
+ */
 type Status string
 
+/**
+ * ENUM
+ */
 var (
-	// StatusDraft ...
-	StatusDraft Status = "DRAFT"
 	// StatusActive ...
 	StatusActive Status = "ACTIVE"
+	// StatusDraft ...
+	StatusDraft Status = "DRAFT"
 	// StatusArchive ...
 	StatusArchive Status = "ARCHIVE"
 )

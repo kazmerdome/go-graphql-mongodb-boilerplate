@@ -1,31 +1,50 @@
 package server
 
 import (
-	"github.com/fatih/color"
+	"context"
+	"os"
+	"os/signal"
+	"time"
+
+	"go-graphql-mongodb-boilerplate/utility"
+
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
 
-// New Init new Echo Server
-func New() *echo.Echo {
+func New() {
+	// Setup & configure server
+	// more info -> https://echo.labstack.com/
 	e := echo.New()
-
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
-	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{Format: loggerFormat()}))
-
-	GetRoutes(e)
-
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{Format: utility.LoggerFormat()}))
 	e.HideBanner = true
-	e.Logger.Fatal(e.Start(":" + "9090"))
-	return e
-}
 
-func loggerFormat() string {
-	blue := color.New(color.FgBlue).SprintFunc()
-	return blue(" latency: ") + "${latency_human}" +
-		// blue(" uri: ") + "${uri}" +
-		// blue(" method: ") + "${method}" +
-		blue(" status: ") + "${status}" +
-		blue(" timeRequest: ") + "${time_rfc3339_nano}" + "\n"
+	/**
+	 * GATEWAYS
+	 */
+	// Load routes from graphql
+	InitGraphql(e)
+	// Load routes from rest
+	InitRest(e)
+
+	// Start server routes
+	go func() {
+		if err := e.Start(":" + "9090"); err != nil {
+			e.Logger.Info("shutting down the server")
+		}
+	}()
+
+	// Stop server gracefully
+	// Wait for interrupt signal to gracefully shutdown the server with a timeout of 10 seconds.
+	// Use a buffered channel to avoid missing signals as recommended for signal.Notify
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
 }

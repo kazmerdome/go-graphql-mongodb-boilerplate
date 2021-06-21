@@ -1,14 +1,10 @@
 package resolver
 
-import (
-	"aery-graphql/generated/gqlgen"
-	"aery-graphql/model"
-)
+import "go-graphql-mongodb-boilerplate/generated/gqlgen"
 
 // Resolver ...
 type Resolver struct {
-	Token  *string
-	Locale *model.Locale
+	Token *string
 }
 
 // Mutation ...

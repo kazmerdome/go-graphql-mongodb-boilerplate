@@ -1,8 +1,9 @@
-NAME=aery-graphql
-VERSION=0.0.1
+NAME=go-graphql-mongodb-boilerplate
+VERSION=1.0.0
 
 # OUTSIDE DOCKER
-start:
+################
+start: #generate #generate needed because of the local linter and git
 	docker-compose run --service-ports $(NAME)
 
 restart:
@@ -14,7 +15,9 @@ stop:
 	docker container prune -f
 	docker-compose down --volumes --rmi all
 
+
 # INSIDE DOCKER
+################
 .PHONY: init
 init:
 	@go mod init $(NAME)
@@ -25,7 +28,7 @@ build:
 
 .PHONY: run
 run: build
-	@./build/$(NAME) -env development
+	@./build/$(NAME)
 
 .PHONY: clean
 clean:
@@ -34,4 +37,4 @@ clean:
 .PHONY: generate
 generate:
 	@if [ -d tmp ]; then rm -r tmp; fi;
-	@go run scripts/gqlgen.go
+	@go run hack/gqlgen-generator.go

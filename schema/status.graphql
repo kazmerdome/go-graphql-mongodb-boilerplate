@@ -1,5 +1,5 @@
-enum Status {
-  DRAFT
+enum Status @goModel(model: "go-graphql-mongodb-boilerplate/model.Status") {
   ACTIVE
+  DRAFT
   ARCHIVE
 }

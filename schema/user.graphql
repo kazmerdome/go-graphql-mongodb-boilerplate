@@ -1,39 +1,21 @@
 # MODEL
 ##########
-type User {
+
+type User @goModel(model: "go-graphql-mongodb-boilerplate/model.User") {
   id: ObjectID!
-  firstname: String!
-  lastname: String!
-  google_id: String!
   email: String!
-  app_policy: [AppPolicy!]!
+  username: String!
+  # password: String!
+  role: Role!
   created_at: Time!
   updated_at: Time!
 }
 
-type AppPolicy {
-  resource: AppPolicyResource!
-  role: Role!
-}
-
 # ENUM
 ##########
-enum AppPolicyResource {
-  BLACKDOME_SERVER
-}
-
-enum Role {
-  USER
-  PARTNER
-  EDITOR
-  ADMIN
-}
-
-enum UserOrderByInput {
-  firstname_ASC
-  firstname_DESC
-  lastname_ASC
-  lastname_DESC
+enum UserOrderByENUM @goModel(model: "go-graphql-mongodb-boilerplate/model.UserOrderByENUM") {
+  username_ASC
+  username_DESC
   email_ASC
   email_DESC
   created_at_ASC
@@ -42,56 +24,31 @@ enum UserOrderByInput {
   updated_at_DESC
 }
 
-
-# CREATE DTO
+# DTO
 ##########
-input UserCreateInput {
-  id: ObjectID
-  firstname: String!
-  lastname: String!
-  google_id: String
-  email: String!
-  app_policy: AppPolicyCreateManyInput!
-}
 
-input AppPolicyCreateManyInput {
-  create: [AppPolicyCreateInput!]!
-}
-
-input AppPolicyCreateInput {
-  resource: AppPolicyResource!
-  role: Role!
-}
-
-# FETCH DTO
-##########
-input UserWhereUniqueInput {
+# Read
+input UserWhereUniqueDTO @goModel(model: "go-graphql-mongodb-boilerplate/model.UserWhereUniqueDTO") {
   id: ObjectID!
 }
 
-input UserWhereInput {
+input UserWhereDTO @goModel(model: "go-graphql-mongodb-boilerplate/model.UserWhereDTO") {
   id: ObjectID
-  firstname: String
-  lastname: String
   email: String
-  app_policy: AppPolicyWhereInput
+  username: String
+  role: Role
 }
 
-input AppPolicyWhereInput {
-  resource: AppPolicyResource!
-  role: Role!
-}
-
-# UPDATE DTO
-###########
-input UserUpdateInput {
-  firstname: String
-  lastname: String
-  google_id: String
+# Write
+input UserCreateDTO @goModel(model: "go-graphql-mongodb-boilerplate/model.UserCreateDTO") {
   email: String!
-  app_policy: AppPolicyUpdateManyInput
+  username: String!
+  password: String!
 }
 
-input AppPolicyUpdateManyInput {
-  create: [AppPolicyCreateInput!]!
+input UserUpdateDTO @goModel(model: "go-graphql-mongodb-boilerplate/model.UserUpdateDTO") {
+  email: String!
+  username: String!
+  password: String
+  # role: Role
 }
