@@ -38,6 +38,7 @@ Other
 ### Development Mode
 step1 - build local environment with docker-compose
 ```console
+  make generate
   make start
 ```
 
