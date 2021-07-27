@@ -4,7 +4,6 @@ go 1.16
 
 require (
 	github.com/99designs/gqlgen v0.13.0
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/golang-jwt/jwt v3.2.1+incompatible // indirect
